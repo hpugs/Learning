@@ -1,13 +1,17 @@
-import org.junit.runner.RunWith;
+package com.hpugs.learning.web.test;
 
-/**
- * IntelliJ IDEA
- *
- * @author gaoshang
- * date: 2020/11/7 下午3:23
- */
-@RunWith(SpringRun)
-@Rollc
+import com.hpugs.learning.web.LearningWebApplication;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = LearningWebApplication.class)
+@Rollback
 public class BaseApplicationTests {
 
     /**
