@@ -1,0 +1,172 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+}
+
+
+ext {
+
+    // 开源工具包
+    springBootVersion = '2.1.4.RELEASE'
+    slf4jVersion = '1.7.12'
+    dubboVersion = '2.7.3'
+    ratelimiterVersion = "1.3.0-RELEASE"
+    curatorVersion = '2.12.0'
+    fastjsonVersion = '1.2.70'
+    elasticJobVersion = '2.1.5'
+    druidVersion = '1.1.10'
+    shardingJdbcVersion = '3.0.0'
+    sentinelVersion = '1.8.0'
+    easyexcelVersion='1.1.1'
+
+    // 业务包
+}
+
+// 应用build 可执行jar包
+apply plugin: 'application'
+mainClassName = 'com.hpugs.learning.web.LearningWebApplication'
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.hpugs.learning.web.LearningWebApplication'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+allprojects{
+
+    sourceCompatibility = '1.8'
+
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'jacoco'
+
+    idea {
+        module {
+            downloadSources = true
+            downloadJavadoc = true
+        }
+    }
+
+    group 'com.hpugs'
+    version '1.0.0-SNAPSHOT'
+
+    configurations {
+        provided
+        compile.extendsFrom provided
+        deployerJars
+        all*.exclude group: 'log4j'
+        all*.exclude group: 'org.slf4j',  module: 'slf4j-log4j12'
+        all*.exclude module: 'commons-logging'
+        all*.exclude group: 'org.apache.logging.log4j'
+        //oss SDK
+        all*.exclude group:  "com.aliyun.oss"
+        //支付宝支付 SDK
+        all*.exclude group: "com.alipay.sdk"
+        // API 开发工具 swagger 的东西 用不到
+        all*.exclude group: "io.springfox"
+        // API 开发工具 swagger
+        all*.exclude group: "io.swagger"
+        //前后端分离了都 留着 JSP 考古吗
+        all*.exclude group: "javax.servlet.jsp"
+        //处理控制台输入的类库，Web 项目要这玩意干嘛？
+        all*.exclude group: "jline"
+        //这真的只是一个简简单单的 Web 项目，查查库就好了 要搜索引擎干嘛
+        all*.exclude group: "org.apache.lucene"
+        //ES这个东西
+        all*.exclude group: "org.elasticsearch"
+        all*.exclude group: "org.elasticsearch.plugin"
+        all*.exclude group: "org.elasticsearch.client"
+        all*.exclude group: "com.aifocus",module: "es-client"
+
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+
+    repositories {
+        //1.优先查找本地maven库，性能最好
+        mavenLocal()
+
+        //2.其次查找远端maven私库
+        maven {
+            name 'nexus'
+            url 'http://nexus.hpugs.com/repository/maven-public/'
+        }
+
+        //3.最后查找Aliyun maven中央库或maven中央库（企业不建议）
+        //mavenCentral()
+    }
+
+
+    configurations.all {
+
+        resolutionStrategy {
+            // check for updates every build
+            cacheChangingModulesFor 0, 'seconds'
+
+            force "org.apache.commons:commons-lang3:3.1"
+            force "org.mybatis:mybatis:3.5.1"
+            force "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+            force "org.apache.dubbo:dubbo:${dubboVersion}"
+            force "org.apache.curator:curator-framework:2.12.0"
+            force "io.netty:netty-all:4.1.44.Final"
+            force "redis.clients:jedis:2.6.3"
+            force "org.aspectj:aspectjweaver:1.8.4"
+            force "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+            force "org.apache.curator:curator-framework:${curatorVersion}"
+            force "com.alibaba:fastjson:${fastjsonVersion}"
+            force 'org.apache.zookeeper:zookeeper:3.4.13'
+            force "org.quartz-scheduler:quartz:2.3.2"
+
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    //java8 doc兼容性
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
+    }
+
+    repositories {
+        jcenter()
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    //在多模块下，不然编译失败，因为不会把信赖模块给打包
+    jar {
+        enabled = true
+    }
+}
+
+
+subprojects {
+    dependencies {
+
+        deployerJars "org.apache.maven.wagon:wagon-http:2.2"
+        compile 'org.projectlombok:lombok:1.18.6'
+        annotationProcessor 'org.projectlombok:lombok:1.18.6'
+        compile "org.springframework.data:spring-data-redis:${springBootVersion}"
+
+        compile "org.apache.skywalking:apm-toolkit-logback-1.x:6.5.0"
+
+        compile "org.quartz-scheduler:quartz:2.3.2"
+        compile group: 'io.netty', name: 'netty-all', version: '4.1.44.Final'
+
+        testCompile "com.h2database:h2:1.4.199"
+
+    }
+}

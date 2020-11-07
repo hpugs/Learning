@@ -1,0 +1,41 @@
+dependencies {
+
+    compile "org.springframework.boot:spring-boot:${springBootVersion}"
+    compile "org.apache.commons:commons-lang3:3.1"
+
+    // JavaBean的映射工具：https://blog.csdn.net/whhahyy/article/details/48594657
+    compile "net.sf.dozer:dozer:5.5.1"
+
+    // google开源二维码工具：https://mvnrepository.com/artifact/com.google.zxing/core
+    compile group: 'com.google.zxing', name: 'core', version: '3.3.3'
+
+    // 阿里巴巴开源的excel工具库
+    compile "com.alibaba:easyexcel:${easyexcelVersion}"
+
+    // 阿里巴巴开源的json工具库
+    compile "com.alibaba:fastjson:${fastjsonVersion}"
+
+    // 阿里巴巴开源sentinel核心库
+    compile "com.alibaba.csp:sentinel-core:${sentinelVersion}"
+
+    // https://mvnrepository.com/artifact/com.alibaba.csp/sentinel-datasource-extension
+    // 阿里巴巴开源sentinel数据源拓展
+    compile "com.alibaba.csp:sentinel-datasource-extension:${sentinelVersion}"
+
+    // 阿里巴巴统一配置平台acm
+    compile "com.alibaba.edas.acm:acm-sdk:1.0.9"
+
+}
+
+//指定目录结构
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDir 'src/main/java'
+            srcDir 'src/main/resources'
+        }
+    }
+}

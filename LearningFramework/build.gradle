@@ -1,0 +1,6 @@
+dependencies {
+
+    compile project(':Learning-common')
+    compile project(':Learning-dao')
+
+}

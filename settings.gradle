@@ -1,0 +1,8 @@
+rootProject.name = 'Learning'
+include 'LearningBasic'
+include 'LearningFramework'
+include 'Learning-common'
+include 'Learning-dao'
+include 'Learning-api'
+include 'Learning-core'
+include 'Learning-web'

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- file pattern -->
+    <property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%level] [blanktemplate] [%tid] %logger{35} : %msg %n"/>
+
+    <property  name="LOG_HOME" value="/data/logs/blanktemplate"/>
+
+    <!-- 出错日志 appender  -->
+    <appender name="RollingErrorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/error.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/error.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- info日志 appender  -->
+    <appender name="RollingInfoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/info.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/info.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- warn日志 appender  -->
+    <appender name="RollingWarnLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/warn.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/warn.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--http跟踪日志-->
+    <appender name="TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/http_trace.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/http_trace.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    <!--http请求跟踪日志异步记录-->
+    <appender name="ASYNC_TRACE" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <appender-ref ref="TRACE"/>
+    </appender>
+
+    <logger name="trace" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC_TRACE"/>
+    </logger>
+
+    <!--http unknown exception 跟踪日志-->
+    <appender name="TRACE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/http_trace_error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/http_trace_error.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    <!--http unknown exception 跟踪日志-->
+    <appender name="ASYNC_TRACE_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <appender-ref ref="TRACE_ERROR"/>
+    </appender>
+
+    <logger name="unknownException" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC_TRACE_ERROR"/>
+    </logger>
+
+
+    <!--dubbo跟踪日志，记录本系统对外提供的dubbo服务的所有请求日志-->
+    <appender name="DUBBO_PROVIDER_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/dubbo_provider_info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/dubbo_provider_info.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    <!--dubbo请求跟踪日志异步记录-->
+    <appender name="ASYNC_DUBBO_PROVIDER" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <appender-ref ref="DUBBO_PROVIDER_APPENDER"/>
+    </appender>
+
+    <logger name="dubbo_provider_logger" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC_DUBBO_PROVIDER"/>
+    </logger>
+
+
+    <!--dubbo跟踪日志，记录本系统调用外部的dubbo服务的日志-->
+    <appender name="DUBBO_CONSUMER_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/dubbo_consumer_info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/dubbo_consumer_info.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+    <!--dubbo请求跟踪日志异步记录-->
+    <appender name="ASYNC_DUBBO_CONSUMER" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <appender-ref ref="DUBBO_CONSUMER_APPENDER"/>
+    </appender>
+
+    <logger name="dubbo_consumer_logger" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC_DUBBO_CONSUMER"/>
+    </logger>
+
+
+    <!--记录本系统调用外部系统的dubbo服务出现exception的日志-->
+    <appender name="RPC_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/dubbo_consumer_error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/dubbo_consumer_error.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <logger name="rpc_error" level="ERROR" additivity="false">
+        <appender-ref ref="RPC_ERROR"/>
+    </logger>
+
+
+
+
+
+    <!--记录本系统调用外部系统的dubbo服务出现exception的日志-->
+    <appender name="DUBBO_PROVIDER_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/dubbo_provider_error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/dubbo_provider_error.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <logger name="dubbo_provider_error" level="ERROR" additivity="false">
+        <appender-ref ref="RPC_ERROR"/>
+    </logger>
+
+
+
+
+    <!--慢sql日志的处理-->
+    <appender name="MybatisSlowSql" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/mybatis_slow_sql.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/archive/mybatis_slow_sql.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout" >
+                <pattern>${FILE_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" additivity="false" level="info">
+        <appender-ref ref="MybatisSlowSql"/>
+    </logger>
+
+
+
+    <appender name="AsyncRollingInfoLogger" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="RollingInfoLogger"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="AsyncRollingWarnLogger" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="RollingWarnLogger"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="AsyncRollingInfoLogger"/>
+        <appender-ref ref="AsyncRollingWarnLogger"/>
+        <appender-ref ref="RollingErrorLogger"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,69 @@
+dependencies {
+
+    compile project(':Learning-common')
+    compile project(':Learning-api')
+    compile project(':Learning-dao')
+
+    compile("org.apache.zookeeper:zookeeper:3.4.6") {
+        exclude group: 'junit'
+        exclude group: 'io.netty'
+        exclude group: 'org.slf4j'
+        exclude group: 'jline'
+        exclude group: 'log4j'
+    }
+
+    // Apache Curator是Apache ZooKeeper的Java / JVM客户端库
+    compile "org.apache.curator:curator-framework:${curatorVersion}"
+
+    // dubbo
+    compile "org.apache.dubbo:dubbo:${dubboVersion}"
+
+    // 阿里云开放服务客户端库
+    compile group: 'com.aliyun.openservices', name: 'ons-client', version: '1.8.0.Final'
+
+    // redis客户端库
+    compile 'redis.clients:jedis:2.6.3'
+    compile ('org.redisson:redisson:3.5.5'){
+        exclude group: 'io.netty'
+    }
+
+    //mapStruct此处必须配置annotationProcessor，否则ast不起作用
+    compile group: 'org.mapstruct',name: 'mapstruct-jdk8', version: '1.3.1.Final'
+    annotationProcessor ("org.mapstruct:mapstruct-processor:1.3.1.Final")
+
+    //定时任务
+    compile "com.dangdang:elastic-job-common-core:${elasticJobVersion}"
+    compile "com.dangdang:elastic-job-lite-core:${elasticJobVersion}"
+    compile "com.dangdang:elastic-job-lite-spring:${elasticJobVersion}"
+
+    // 切面注解
+    compile "org.aspectj:aspectjweaver:1.9.2"
+
+    //cache 框架
+    compile("com.github.qiujiayu:autoload-cache:7.0.4")
+    compile("uk.com.robust-it:cloning:1.9.2")
+    compile group: 'joda-time', name: 'joda-time', version: '2.10.4'
+
+}
+
+//ConvertMapper
+compileJava {
+    options.compilerArgs = [
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.suppressGeneratorVersionInfoComment=true'
+    ]
+}
+
+//指定目录结构
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDir 'src/main/java'
+            srcDir 'src/main/resources'
+        }
+    }
+}
+

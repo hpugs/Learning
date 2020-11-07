@@ -1,0 +1,25 @@
+dependencies {
+
+	compile project(':Learning-common')
+	compile project(':Learning-core')
+
+	compile "junit:junit:4.12"
+	implementation('org.springframework.boot:spring-boot-starter-web') {
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+	}
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+//ConvertMapper
+compileJava {
+	options.compilerArgs = [
+			'-Amapstruct.suppressGeneratorTimestamp=true',
+			'-Amapstruct.suppressGeneratorVersionInfoComment=true'
+	]
+}
+
+apply plugin: 'jacoco'
+// jacoco 覆盖率 jacocoTestReport
+check.dependsOn jacocoTestReport

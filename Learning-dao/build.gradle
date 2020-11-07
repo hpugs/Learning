@@ -1,0 +1,28 @@
+dependencies {
+
+    compile project(':Learning-common')
+
+    compile "org.springframework.boot:spring-boot:${springBootVersion}"
+
+    // 数据库连接
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1"
+    compile 'mysql:mysql-connector-java:6.0.6'
+
+    //（德鲁伊）阿里巴巴开源的连接池
+    compile "com.alibaba:druid:${druidVersion}"
+
+}
+
+//指定目录结构
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDir 'src/main/java'
+            srcDir 'src/main/resources'
+        }
+    }
+}
