@@ -4,10 +4,11 @@
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
+    <!-- file path -->
+    <property  name="LOG_HOME" value="/data/logs/learning"/>
+
     <!-- file pattern -->
     <property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%level] [blanktemplate] [%tid] %logger{35} : %msg %n"/>
-
-    <property  name="LOG_HOME" value="/data/logs/blanktemplate"/>
 
     <!-- 出错日志 appender  -->
     <appender name="RollingErrorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -68,8 +69,7 @@
             <FileNamePattern>${LOG_HOME}/archive/warn.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
-
-        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印WARN日志 -->
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>

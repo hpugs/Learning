@@ -3,4 +3,6 @@ dependencies {
     compile project(':Learning-common')
     compile project(':Learning-dao')
 
+    compile "junit:junit:4.12"
+
 }
