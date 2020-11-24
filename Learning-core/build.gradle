@@ -21,6 +21,10 @@ dependencies {
     // 阿里云开放服务客户端库
     compile group: 'com.aliyun.openservices', name: 'ons-client', version: '1.8.0.Final'
 
+    // Alibaba TTL https://mvnrepository.com/artifact/com.alibaba/transmittable-thread-local
+    compile group: 'com.alibaba', name: 'transmittable-thread-local', version: '2.11.4'
+
+
     // redis客户端库
     compile 'redis.clients:jedis:2.6.3'
     compile ('org.redisson:redisson:3.5.5'){
