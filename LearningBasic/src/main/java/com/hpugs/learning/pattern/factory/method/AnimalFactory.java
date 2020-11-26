@@ -1,7 +1,7 @@
-package com.hpugs.learning.pattern.factory;
+package com.hpugs.learning.pattern.factory.method;
 
 /**
- * 工厂
+ * 工厂方法模式
  *
  * @author gaoshang
  * date: 2020/11/26 下午3:23

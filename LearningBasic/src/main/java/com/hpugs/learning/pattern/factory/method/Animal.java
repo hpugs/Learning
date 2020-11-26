@@ -1,4 +1,4 @@
-package com.hpugs.learning.pattern.factory;
+package com.hpugs.learning.pattern.factory.method;
 
 /**
  * 定义一个模板类
