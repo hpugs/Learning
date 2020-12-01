@@ -5,4 +5,12 @@ dependencies {
 
     compile "junit:junit:4.12"
 
+    // https://mvnrepository.com/artifact/org.jboss.netty/netty
+    compile group: 'org.jboss.netty', name: 'netty', version: '3.2.10.Final'
+
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.54.Final'
+
+
+
 }
