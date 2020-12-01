@@ -27,7 +27,7 @@ public class Demo {
             System.out.println("--------------------------");
 
             dataSourceDecorator = new UpperCaseDecorator(new EncryptionDecorator(dataSource));
-            dataSourceDecorator.write("EncryptionDecorator -> UpperCaseDecorator -> FileDataSource write");
+            dataSourceDecorator.write("UpperCaseDecorator -> EncryptionDecorator -> FileDataSource write");
             read = dataSourceDecorator.read();
             System.out.println(read);
         } catch (IOException e) {
