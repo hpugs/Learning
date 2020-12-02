@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * IntelliJ IDEA
+ * 泛型学习
  *
  * @author gaoshang
  * date: 2020/11/16 下午3:49
