@@ -24,8 +24,10 @@ public class SwaggerConfiguration {
     @Bean
     public Docket createRestApi() {
         // 创建 Docket 对象
-        return new Docket(DocumentationType.SWAGGER_2) // 文档类型，使用 Swagger2
-                .apiInfo(this.apiInfo()) // 设置 API 信息
+        // 文档类型，使用 Swagger2
+        return new Docket(DocumentationType.SWAGGER_2)
+                // 设置 API 信息
+                .apiInfo(this.apiInfo())
                 // 扫描 Controller 包路径，获得 API 接口
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.hpugs.learning.web.collections"))
@@ -42,8 +44,10 @@ public class SwaggerConfiguration {
         return new ApiInfoBuilder()
                 .title("测试接口文档示例")
                 .description("我是一段描述")
-                .version("1.0.0") // 版本号
-                .contact(new Contact("信鸽", "http://www.hpugs.com", "xinge@webuy.ai")) // 联系人
+                // 版本号
+                .version("1.0.0")
+                // 联系人
+                .contact(new Contact("信鸽", "http://www.hpugs.com", "xinge@webuy.ai"))
                 .build();
     }
 
