@@ -61,6 +61,14 @@ public class KeywordUtil {
         System.out.println("-------------------");
 
         exe2();
+
+        System.out.println("-------------------");
+
+        /**
+         * Thread.yield() 方法，使当前线程由执行状态，变成为就绪状态，让出cpu时间，
+         * 在下一个线程执行时候，此线程有可能被执行，也有可能没有被执行。
+         */
+        yieldTest();
     }
 
     private static void exe1() {
@@ -84,6 +92,35 @@ public class KeywordUtil {
         npm(100L);
         myRunableList.forEach(MyRunable::quit);
         completableFutureList.forEach(CompletableFuture::join);
+    }
+
+    public static void yieldTest(){
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        for (int i = 0; i < 5; i++) {
+            executorService.submit(new MyRun("Thread" + i));
+        }
+        executorService.shutdown();
+    }
+
+    static class MyRun implements Runnable {
+
+        private String name;
+
+        public MyRun(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 1; i <= 10; i++) {
+                System.out.println("" + name + "-----" + i);
+                // 当i为30时，该线程就会把CPU时间让掉，让其他或者自己的线程执行（也就是谁先抢到谁执行）
+                if (i % 5 == 0) {
+                    System.out.println("线程：" + name + "进入就绪状态");
+                    Thread.yield();
+                }
+            }
+        }
     }
 
 }

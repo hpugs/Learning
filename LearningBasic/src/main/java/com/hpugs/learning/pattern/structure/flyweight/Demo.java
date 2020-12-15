@@ -3,7 +3,7 @@ package com.hpugs.learning.pattern.structure.flyweight;
 import java.awt.*;
 
 /**
- * IntelliJ IDEA
+ * 享元设计模式
  *
  * @author gaoshang
  * date: 2020/12/3 下午6:00
